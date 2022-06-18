@@ -54,7 +54,7 @@ class VideoRecorder:
             Error: Invalid path given that must have a particular file extension
         """
         self._async = env.metadata.get("semantics.async")
-        self.enabled = False
+        self.enabled = True
         self._closed = False
 
         logger.deprecation(

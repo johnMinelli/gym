@@ -64,18 +64,20 @@ class RecordVideo(gym.Wrapper):
         """
         super().__init__(env)
 
+        self.recording = False
         self.enabled = True
 
         if "rgb_array" == env.render_mode or "single_rgb_array" == env.render_mode:
             try:
                 # Check library availability
                 from moviepy.tools import extensions_dict
+
+                self.codec = extensions_dict[RECORDING_EXT]["codec"][0]
             except ImportError:
                 logger.warn(
                     "Disabling video recorder because MoviePy is not installed, run `pip install moviepy`."
                 )  # FIXME is it ok, or an exception is needed?
-            self.enabled = True
-            self.codec = extensions_dict[RECORDING_EXT]["codec"][0]
+                self.enabled = False
         else:
             if "ansi" == env.render_mode:
                 logger.deprecation(
@@ -124,7 +126,6 @@ class RecordVideo(gym.Wrapper):
         self.video_length = video_length
         self.name_prefix = name_prefix
 
-        self.recording = False
         self.recorded_frames = 0
         self.frames = []
         self.is_vector_env = getattr(env, "is_vector_env", False)
