@@ -25,6 +25,10 @@ class VideoRecorder:
     It comes with an ``enabled`` option, so you can still use the same code on episodes where you don't want to record video.
 
     Note:
+        VideoRecorder is deprecated [https://github.com/openai/gym/issues/2905].
+        Collect the frames with render_mode='rgb_array' and use an external library like MoviePy:
+        https://zulko.github.io/moviepy/getting_started/videoclips.html#videoclip
+    Note:
         You are responsible for calling :meth:`close` on a created VideoRecorder, or else you may leak an encoder process.
     """
 
@@ -50,8 +54,14 @@ class VideoRecorder:
             Error: Invalid path given that must have a particular file extension
         """
         self._async = env.metadata.get("semantics.async")
-        self.enabled = enabled
+        self.enabled = False
         self._closed = False
+
+        logger.deprecation(
+            "VideoRecorder is deprecated [https://github.com/openai/gym/issues/2905].\n"
+            "Collect the frames with render_mode='rgb_array' and use an external library like MoviePy: "
+            "https://zulko.github.io/moviepy/getting_started/videoclips.html#videoclip"
+        )
 
         self.ansi_mode = False
         if "rgb_array" != env.render_mode and "single_rgb_array" != env.render_mode:
